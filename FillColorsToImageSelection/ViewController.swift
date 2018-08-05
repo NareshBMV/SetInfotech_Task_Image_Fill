@@ -20,7 +20,6 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         
         fillImage.tolorance = 200
-        fillImage.newColor = .red
         selectedImage = fillImage.image
         
         super.viewDidLoad()
