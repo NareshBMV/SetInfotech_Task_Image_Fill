@@ -20,7 +20,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         
         fillImage.tolorance = 200
-        fillImage.newColor = .clear
+        fillImage.newColor = .red
         selectedImage = fillImage.image
         
         super.viewDidLoad()
@@ -46,7 +46,7 @@ extension ViewController:UICollectionViewDataSource, UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        fillImage.newColor = collectionView.cellForItem(at: indexPath)?.backgroundColor
+        fillImage.newColor = colorPalate[indexPath.row]
     }
 }
 

@@ -14,7 +14,7 @@ class FillImage: UIImageView {
     var newColor:UIColor?
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-
+        
         let touch = touches.first
         let location = touch?.location(in: self)
         let newImage = self.image?.floodFillFromPoint(point: location!, tolerance: tolorance!, fillColor: newColor!)
@@ -34,12 +34,11 @@ extension UIImage {
         let pixel = imageBuffer[index]
 
         let replacementPixel = Pixel(color: fillColor)
-        imageBuffer.getIndicesAndColor(pixel, startingAtPoint: (Int(point.x), Int(point.y)), tolerance: tolerance,antialias: false, replacementPixel: replacementPixel)
+
+        imageBuffer.getIndicesAndColor(pixel, startingAtPoint: (Int(point.x), Int(point.y)), withColor: replacementPixel, tolerance: tolerance, antialias: true)
         
         return UIImage(cgImage: imageBuffer.image, scale: self.scale, orientation: UIImageOrientation.up)
     }
-    
-    
 }
 
 

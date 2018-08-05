@@ -76,7 +76,7 @@ struct Pixel {
     func blend(_ other: Pixel) -> Pixel {
         let a1 = CGFloat(self.a) / 255.0
         let a2 = CGFloat(other.a) / 255.0
-
+        
         return Pixel(
             UInt8((a1 * CGFloat(self.r)) + (a2 * (1 - a1) * CGFloat(other.r))),
             UInt8((a1 * CGFloat(self.g)) + (a2 * (1 - a1) * CGFloat(other.g))),

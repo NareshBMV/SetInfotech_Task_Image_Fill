@@ -19,8 +19,9 @@ class ImageBuffer {
         self.imageHeight = Int(image.height)
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         
-        self.context = CGContext(data: nil, width: imageWidth, height: imageHeight, bitsPerComponent: image.bitsPerComponent, bytesPerRow: image.bytesPerRow, space: colorSpace, bitmapInfo: image.bitmapInfo.rawValue  | image.alphaInfo.rawValue)!
+        self.context = CGContext(data: nil, width: imageWidth, height: imageHeight, bitsPerComponent: 8, bytesPerRow: imageWidth * 4, space: colorSpace, bitmapInfo: CGBitmapInfo.byteOrder32Little.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue)!
         self.context.draw(image, in: CGRect(x: 0, y: 0, width: CGFloat(imageWidth), height: CGFloat(imageHeight)))
+        
         let ptr = context.data
         self.pixelBuffer = ptr!.assumingMemoryBound(to: UInt32.self)
     }
@@ -40,11 +41,14 @@ class ImageBuffer {
         return pixel.diff(newPixel)
     }
     
-    func getIndicesAndColor(_ colorPixel: Pixel, startingAtPoint startingPoint: (Int, Int), tolerance: Int, antialias: Bool,  replacementPixel: Pixel) {
+    func getIndicesAndColor(_ colorPixel: Pixel, startingAtPoint startingPoint: (Int, Int), withColor replacementPixel: Pixel, tolerance: Int, antialias: Bool) {
+        
+        func testPixelAtPoint(_ x: Int, _ y: Int) -> Bool {
+            return differenceAtPoint(x, y, toPixel: colorPixel) <= tolerance
+        }
         
         let seenIndices = NSMutableIndexSet()
         let indices = NSMutableIndexSet(index: indexFrom(startingPoint.0, startingPoint.1))
-        
         while indices.count > 0 {
             let index = indices.firstIndex
             indices.remove(index)
@@ -98,9 +102,10 @@ class ImageBuffer {
                     }
                 }
             }
-        }        
+            
+        }
     }
-
+    
     subscript(index: Int) -> Pixel {
         get {
             let pixelIndex = pixelBuffer + index
